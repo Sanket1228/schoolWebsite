@@ -1,0 +1,8 @@
+{
+    "params":
+    {
+        "localserver" : "mysql+mysqlconnector://root:@localhost/school",
+        "admin" : "admin",
+        "admin_pass" : "admin"
+    }
+}
