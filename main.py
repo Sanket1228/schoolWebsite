@@ -1,6 +1,7 @@
 from flask import Flask, render_template,request,session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_mail import Mail
 import json
 
 with open('config.json','r') as c:
@@ -15,6 +16,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = params["localserver"]
 
 db = SQLAlchemy(app)
 
+app.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT="465",
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=params['gmail_user'],
+    MAIL_PASSWORD=params['gmail_pass']
+)
+mail = Mail(app)
 
 class Contacts(db.Model):
     sno = db.Column(db.Integer, primary_key=True)
@@ -33,17 +42,12 @@ def index():
         entry = Contacts(name=name, email = email,  message = message, date= datetime.now())
         db.session.add(entry)
         db.session.commit()
+        mail.send_message('New Message from ' + name,
+                          sender=email,
+                          recipients=[params['gmail_user']],
+                          body=message
+                          )
 
-    return render_template("index.html")
-
-@app.route("/dashboard", methods=['GET','POST'])
-def dashboard():
-    if(request.method=="POST"):
-        username = request.form.get("uname")
-        password = request.form.get("pass")
-        if (username == params['admin'] and password == params['admin_pass']):
-            session['user'] = username
-            return render_template("dashboard.html")
-    return render_template("login.html")
+    return render_template("index.html",params=params)
 
 app.run(debug=True)

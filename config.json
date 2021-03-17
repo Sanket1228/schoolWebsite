@@ -3,6 +3,12 @@
     {
         "localserver" : "mysql+mysqlconnector://root:@localhost/school",
         "admin" : "admin",
-        "admin_pass" : "admin"
+        "admin_pass" : "admin",
+        "gmail_user" : "sanketpatil1228@gmail.com",
+        "gmail_pass" : "sanket1228",
+        "branches" : 1,
+        "staffs" : 5,
+        "students" : 30,
+        "phone_number" : 1234567890
     }
 }
